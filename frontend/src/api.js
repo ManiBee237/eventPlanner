@@ -1,62 +1,105 @@
-// Toggle this to hit your real backend via the Vite proxy (/api/*)
-const REAL_API = false
+// src/api.js
+// Mock API with 100 sample events
 
-const BASE = REAL_API ? '/api' : null
+import { faker } from '@faker-js/faker';
 
-const delay = (ms) => new Promise(r => setTimeout(r, ms))
+// toggle this when backend is ready
+const REAL_API = false;
 
-// ------- REAL endpoints -------
-async function realGet(url, options){
-  const r = await fetch(url, options)
-  if(!r.ok) throw new Error(`HTTP ${r.status}`)
-  return r.json()
-}
+let mockEvents = [];
 
-// ------- MOCK data (frontend-only demo) -------
-const mockEvents = [
-  { _id:'1', title:'AI Seminar', description:'Intro to ML & GenAI', date:new Date(Date.now()+86400000).toISOString(), venue:'Auditorium A', category:'Seminar', tags:['ai','ml'] },
-  { _id:'2', title:'Frontend Fest', description:'Vite + Tailwind crash course', date:new Date(Date.now()+2*86400000).toISOString(), venue:'Main Lawn', category:'Fest', tags:['frontend','tailwind'] },
-  { _id:'3', title:'Node Workshop', description:'Express APIs from zero to hero', date:new Date(Date.now()+3*86400000).toISOString(), venue:'Lab 2', category:'Workshop', tags:['node','api'] },
-  { _id:'4', title:'Marketing 101', description:'Branding & growth tactics', date:new Date(Date.now()+5*86400000).toISOString(), venue:'Hall C', category:'Seminar', tags:['marketing'] },
-  { _id:'5', title:'Hack Night', description:'Build, pizza, demos', date:new Date(Date.now()+7*86400000).toISOString(), venue:'Innovation Hub', category:'Networking', tags:['hack','startup'] },
-]
+// Generate 100 mock events
+function generateMockEvents(n = 100) {
+  const categories = ["Tech", "Education", "Music", "Art", "Health", "Sports", "Business", "AI", "Community"];
+  const tagsList = ["AI", "Machine Learning", "Networking", "Workshop", "Concert", "Webinar", "Conference", "Hackathon"];
 
-export async function listEvents(){
-  if(REAL_API) return realGet(`${BASE}/events`)
-  await delay(300)
-  return mockEvents
-}
-
-export async function getEvent(id){
-  if(REAL_API) return realGet(`${BASE}/events/${id}`)
-  await delay(200)
-  const ev = mockEvents.find(e => e._id === id)
-  if(!ev) throw new Error('Event not found')
-  return ev
-}
-
-export async function registerUser(payload){
-  if(REAL_API){
-    return realGet(`${BASE}/registrations`, {
-      method:'POST', headers:{'content-type':'application/json'},
-      body: JSON.stringify(payload)
-    })
+  let events = [];
+  for (let i = 0; i < n; i++) {
+    events.push({
+      id: i + 1,
+      title: faker.company.catchPhrase(),
+      description: faker.lorem.paragraph(),
+      date: faker.date.future().toISOString(),
+      location: faker.location.city(),
+      organizer: faker.company.name(),
+      category: faker.helpers.arrayElement(categories),
+      tags: faker.helpers.arrayElements(tagsList, faker.number.int({ min: 2, max: 4 })),
+      participants: Array.from({ length: faker.number.int({ min: 10, max: 100 }) }, () => ({
+        name: faker.person.fullName(),
+        email: faker.internet.email(),
+      })),
+    });
   }
-  await delay(400)
-  return { registrationId: crypto.randomUUID(), userId: payload.email || 'user123' }
+  return events;
 }
 
-export async function getParticipants(eventId){
-  if(REAL_API) return realGet(`${BASE}/admin/participants/${eventId}`)
-  await delay(250)
-  return [
-    { _id:'p1', user:{ name:'Aarav', email:'aarav@example.com', interests:['ai','ml'] }, createdAt:new Date().toISOString() },
-    { _id:'p2', user:{ name:'Isha', email:'isha@example.com', interests:['frontend'] }, createdAt:new Date().toISOString() },
-  ]
+// Initialize data
+mockEvents = generateMockEvents(100);
+
+// ---------------------------- API FUNCTIONS ----------------------------
+
+export async function listEvents() {
+  if (REAL_API) {
+    const res = await fetch("/api/events");
+    return res.json();
+  }
+  return mockEvents;
 }
 
-export async function getRecommendations(userId){
-  if(REAL_API) return realGet(`${BASE}/events/recommend/${userId}`)
-  await delay(350)
-  return mockEvents.slice(1, 4)
+export async function getEvent(id) {
+  if (REAL_API) {
+    const res = await fetch(`/api/events/${id}`);
+    return res.json();
+  }
+  return mockEvents.find(e => e.id === Number(id));
+}
+
+export async function createEvent(data) {
+  if (REAL_API) {
+    const res = await fetch("/api/events", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+    return res.json();
+  }
+  const newEvent = { id: mockEvents.length + 1, ...data };
+  mockEvents.push(newEvent);
+  return newEvent;
+}
+
+export async function getRecommendations() {
+  if (REAL_API) {
+    const res = await fetch("/api/recommendations");
+    return res.json();
+  }
+  return faker.helpers.shuffle(mockEvents).slice(0, 5);
+}
+
+export async function getParticipants(eventId) {
+  const event = mockEvents.find(e => e.id === Number(eventId));
+  return event ? event.participants : [];
+}
+
+
+let mockUsers = [];
+
+/**
+ * Mock register API - always succeeds
+ */
+export async function registerUser(data) {
+  // create fake user
+  const newUser = {
+    id: mockUsers.length + 1,
+    name: data.name || "Guest User",
+    email: data.email || `user${mockUsers.length + 1}@example.com`,
+  };
+
+  mockUsers.push(newUser);
+
+  return {
+    success: true,
+    message: "Registration successful 🎉",
+    user: newUser,
+  };
 }

@@ -1,10 +1,11 @@
+// src/main.jsx
 import React from "react"
 import { createRoot } from "react-dom/client"
 import { createBrowserRouter, RouterProvider } from "react-router-dom"
 import "./index.css"
 
 import App from "./App.jsx"
-import Home from "./pages/home.jsx"
+import Home from "./pages/Home.jsx"
 import EventList from "./pages/EventList.jsx"
 import EventDetails from "./pages/EventDetails.jsx"
 import Register from "./pages/Register.jsx"
@@ -12,8 +13,17 @@ import Admin from "./pages/Admin.jsx"
 import Dashboard from "./pages/Dashboard.jsx"
 import PurpleSidebarLayout from "./layouts/PurpleSidebarLayout.jsx"
 
+function NotFound() {
+  return (
+    <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+      <h1 className="text-2xl font-bold text-[--primary]">404</h1>
+      <p className="text-gray-600">Page not found.</p>
+    </div>
+  )
+}
+
 const router = createBrowserRouter([
-  // public / basic layout
+  // Public layout
   {
     path: "/",
     element: <App />,
@@ -24,8 +34,7 @@ const router = createBrowserRouter([
       { path: "register", element: <Register /> },
     ],
   },
-
-  // console layout (purple sidebar)
+  // Console layout
   {
     path: "/",
     element: <PurpleSidebarLayout />,
@@ -34,6 +43,8 @@ const router = createBrowserRouter([
       { path: "admin", element: <Admin /> },
     ],
   },
+  // Catch-all
+  { path: "*", element: <NotFound /> },
 ])
 
 createRoot(document.getElementById("root")).render(

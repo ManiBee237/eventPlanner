@@ -1,16 +1,17 @@
 @import "tailwindcss";
 
-/* simple palette as CSS vars (used via arbitrary values) */
+/* palette already present? keep yours or replace */
 :root{
-  --primary:#2C3E50;     /* Dark Navy */
-  --secondary:#18BC9C;   /* Teal Green */
-  --accent:#E74C3C;      /* Red */
-  --background:#ECF0F1;  /* Off White */
-  --text:#34495E;        /* Charcoal */
+  --primary:#2C3E50; --secondary:#18BC9C; --accent:#E74C3C;
+  --background:#ECF0F1; --text:#34495E;
+
+  /* fonts */
+  --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  --font-display: 'Space Grotesk', ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
 }
 
-body{ 
-  font-family: 'Poppins', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+body{
+  font-family: var(--font-sans);
   background: var(--background);
   color: var(--text);
 }

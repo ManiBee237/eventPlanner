@@ -1,4 +1,3 @@
-// src/main.jsx
 import React from "react"
 import { createRoot } from "react-dom/client"
 import { createBrowserRouter, RouterProvider } from "react-router-dom"
@@ -6,45 +5,38 @@ import "./index.css"
 
 import App from "./App.jsx"
 import Home from "./pages/Home.jsx"
-import EventList from "./pages/EventList.jsx"
-import EventDetails from "./pages/EventDetails.jsx"
 import Register from "./pages/Register.jsx"
-import Admin from "./pages/Admin.jsx"
-import Dashboard from "./pages/Dashboard.jsx"
-import PurpleSidebarLayout from "./layouts/PurpleSidebarLayout.jsx"
-
-function NotFound() {
-  return (
-    <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-      <h1 className="text-2xl font-bold text-[--primary]">404</h1>
-      <p className="text-gray-600">Page not found.</p>
-    </div>
-  )
-}
+import EventsSplit from "./pages/EventsSplit.jsx"
+import EventDetailsPanel from "./pages/EventDetailsPanel.jsx"
+import Recommendations from "./pages/Recommendations.jsx"
+import RightHint from "./pages/RightHint.jsx"
+import Schedule from "./pages/Schedule.jsx"
 
 const router = createBrowserRouter([
-  // Public layout
   {
     path: "/",
-    element: <App />,
+    element: <App />,              // App MUST render <Outlet/>
     children: [
       { index: true, element: <Home /> },
-      { path: "events", element: <EventList /> },
-      { path: "events/:id", element: <EventDetails /> },
+
+      // 👇 Split view parent
+      {
+        path: "events",
+        element: <EventsSplit />,   // MUST render <Outlet/> (right panel)
+        children: [
+          { index: true, element: <RightHint /> },
+          { path: ":id", element: <EventDetailsPanel /> }, // 👈 nested child
+        ],
+      },
+      
+
       { path: "register", element: <Register /> },
     ],
+    
   },
-  // Console layout
-  {
-    path: "/",
-    element: <PurpleSidebarLayout />,
-    children: [
-      { path: "dashboard", element: <Dashboard /> },
-      { path: "admin", element: <Admin /> },
-    ],
-  },
-  // Catch-all
-  { path: "*", element: <NotFound /> },
+  { path: "recommendations", element: <Recommendations /> },
+  { path: "schedule", element: <Schedule /> },
+  { path: "*", element: <div className="text-white/80 p-6">404</div> },
 ])
 
 createRoot(document.getElementById("root")).render(

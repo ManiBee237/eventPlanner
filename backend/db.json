@@ -1,0 +1,78 @@
+{
+  "events": [
+    {
+      "id": "KY_tsHvgNk",
+      "title": "AI for Product Managers",
+      "description": "AI for Product Managers — join us for hands-on sessions, Q&A, and networking.",
+      "category": "Seminar",
+      "date": "2025-10-06T13:00:34.820Z",
+      "venue": "Auditorium A",
+      "tags": [
+        "AI",
+        "Product",
+        "ML"
+      ]
+    },
+    {
+      "id": "K4Rj80mJh_",
+      "title": "React Advanced Workshop",
+      "description": "React Advanced Workshop — join us for hands-on sessions, Q&A, and networking.",
+      "category": "Workshop",
+      "date": "2025-10-09T13:00:34.821Z",
+      "venue": "Lab 2",
+      "tags": [
+        "React",
+        "Frontend"
+      ]
+    },
+    {
+      "id": "dUCgE62qOk",
+      "title": "Startup Networking Night",
+      "description": "Startup Networking Night — join us for hands-on sessions, Q&A, and networking.",
+      "category": "Networking",
+      "date": "2025-10-10T13:00:34.821Z",
+      "venue": "Cafe Commons",
+      "tags": [
+        "Networking",
+        "Founders"
+      ]
+    },
+    {
+      "id": "zlC1sjMUcx",
+      "title": "Design Systems 101",
+      "description": "Design Systems 101 — join us for hands-on sessions, Q&A, and networking.",
+      "category": "Seminar",
+      "date": "2025-10-14T13:00:34.821Z",
+      "venue": "Hall B",
+      "tags": [
+        "Design",
+        "UX"
+      ]
+    },
+    {
+      "id": "nSdjBBV-rb",
+      "title": "Cloud & DevOps Bootcamp",
+      "description": "Cloud & DevOps Bootcamp — join us for hands-on sessions, Q&A, and networking.",
+      "category": "Workshop",
+      "date": "2025-10-18T13:00:34.821Z",
+      "venue": "Lab 1",
+      "tags": [
+        "DevOps",
+        "Cloud"
+      ]
+    },
+    {
+      "id": "-M3n4WRPw0",
+      "title": "Music Fest: Indie Beats",
+      "description": "Music Fest: Indie Beats — join us for hands-on sessions, Q&A, and networking.",
+      "category": "Fest",
+      "date": "2025-10-24T13:00:34.821Z",
+      "venue": "Open Arena",
+      "tags": [
+        "Music",
+        "Fest"
+      ]
+    }
+  ],
+  "registrations": []
+}

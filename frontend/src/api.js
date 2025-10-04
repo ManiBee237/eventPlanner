@@ -39,19 +39,25 @@ mockEvents = generateMockEvents(100);
 // ---------------------------- API FUNCTIONS ----------------------------
 
 export async function listEvents() {
-  if (REAL_API) {
-    const res = await fetch("/api/events");
-    return res.json();
+  try {
+    const res = await fetch(`${API}/api/events`, { mode: "cors" });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    // ensure each event has an id
+    return (Array.isArray(data) ? data : []).map((e, i) => ({
+      ...e,
+      _id: e._id || e.id || String(i + 1),
+    }));
+  } catch (err) {
+    console.warn("listEvents() failed, using MOCK_EVENTS:", err?.message || err);
+    return MOCK_EVENTS;
   }
-  return mockEvents;
 }
 
 export async function getEvent(id) {
-  if (REAL_API) {
-    const res = await fetch(`/api/events/${id}`);
-    return res.json();
-  }
-  return mockEvents.find(e => e.id === Number(id));
+  if (!id) return undefined;
+  const all = await listEvents();
+  return all.find(e => (e._id || e.id) === id);
 }
 
 export async function createEvent(data) {
@@ -77,9 +83,72 @@ export async function getRecommendations() {
 }
 
 export async function getParticipants(eventId) {
-  const event = mockEvents.find(e => e.id === Number(eventId));
-  return event ? event.participants : [];
+  // Optional; keep if Dashboard/Admin uses it. Provide safe fallback.
+  try {
+    const res = await fetch(`${API}/api/events/${eventId}/participants`, { mode: "cors" });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return await res.json();
+  } catch {
+    return [];
+  }
 }
+
+export const MOCK_EVENTS = [
+  {
+    _id: "e1",
+    title: "GenAI for Product Managers",
+    description: "Hands-on strategies to ship AI features responsibly.",
+    date: new Date(Date.now() + 86400000).toISOString(), // +1 day
+    venue: "Auditorium A",
+    category: "Seminar",
+    tags: ["AI", "PM", "Strategy"],
+  },
+  {
+    _id: "e2",
+    title: "Full-Stack Workshop: React + Node",
+    description: "Build a production-ready stack with best practices.",
+    date: new Date(Date.now() + 2 * 86400000).toISOString(),
+    venue: "Lab 2",
+    category: "Workshop",
+    tags: ["React", "Node", "API"],
+  },
+  {
+    _id: "e3",
+    title: "UX Micro-Interactions Fest",
+    description: "Design delightful, subtle interactions that sing.",
+    date: new Date(Date.now() + 3 * 86400000).toISOString(),
+    venue: "Design Hall",
+    category: "Fest",
+    tags: ["UX", "Motion", "Figma"],
+  },
+  {
+    _id: "e4",
+    title: "Data Viz Night",
+    description: "Tell better stories with charts and dashboards.",
+    date: new Date(Date.now() + 4 * 86400000).toISOString(),
+    venue: "Studio 4",
+    category: "Seminar",
+    tags: ["D3", "Charts", "Story"],
+  },
+  {
+    _id: "e5",
+    title: "Startup Networking",
+    description: "Founders, builders, and investors meet & mingle.",
+    date: new Date(Date.now() + 5 * 86400000).toISOString(),
+    venue: "Cafe Commons",
+    category: "Networking",
+    tags: ["Founders", "Pitch", "VC"],
+  },
+  {
+    _id: "e6",
+    title: "Prompt Engineering 101",
+    description: "Level up your prompts for reliable outcomes.",
+    date: new Date(Date.now() + 6 * 86400000).toISOString(),
+    venue: "Room 12",
+    category: "Workshop",
+    tags: ["AI", "Prompts", "LLM"],
+  },
+];
 
 
 let mockUsers = [];

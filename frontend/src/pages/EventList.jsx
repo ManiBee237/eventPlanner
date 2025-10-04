@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react"
 import { listEvents } from "../api"
 import EventCard from "../components/EventCard"
+import EventsSplit from "./EventsSplit"
+import EventDetailsPanel from "./EventDetailsPanel"
 
 export default function EventList(){
   const [events, setEvents] = useState(null)
@@ -31,6 +33,8 @@ export default function EventList(){
           {filtered.map(ev => <EventCard key={ev._id} ev={ev} />)}
         </div>
       )}
+      <EventsSplit />
+      <EventDetailsPanel />
     </div>
   )
 }
